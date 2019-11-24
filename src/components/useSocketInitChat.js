@@ -5,13 +5,14 @@ export const useSocketInitChat = (socket, token, socketState, setSocketState, da
 
   useEffect(() => {
     socket.on('init-chat-success', response => {
-      console.warn('!!! NEKO socket messages !!! message: ', response);
+      console.warn('!!! NEKO socket messages !!! init-chat: ', response);
       setSocketState({...socketState, initChat: response})
     })
   }, [socket, setSocketState]);
 
   const initChat = useCallback(() => {
     console.log('init-chat...');
+    console.log(data);
     socket.emit('init-chat', {token, interlocutorId: data.interlocutorId});
   }, [token, socket, data.interlocutorId]);
   return initChat

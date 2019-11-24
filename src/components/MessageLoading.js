@@ -1,6 +1,7 @@
 import React from 'react';
 
 
+
 function MessageLoading() {
   return (
     <div className="message loading">

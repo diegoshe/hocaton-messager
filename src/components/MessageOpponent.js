@@ -1,13 +1,5 @@
 import React from 'react';
 
-// IInterlocutor: {
-//   id: "",
-//     name: "Tolik",
-//     photo: {
-//     small: "",
-//       large: ""
-//   }
-
 function MessageOpponent(props) {
   return (
     <div className="message">

@@ -1,9 +1,9 @@
 import React from 'react';
 
 
-function Chat(props) {
+function Message(props) {
   return (
-    <div className="message" onClick={() => props.getMessages(props.c.interlocutor.id)}>
+    <div className="message" onClick={() => props.getMessages}>
       <figure className="avatar"><img src={props.c.interlocutor.photo.small} /></figure>
       <span className="message-text" onClick={props.getMessages}>{props.c.interlocutor.name}</span>
       <div className="timestamp">{props.c.interlocutor.visitDate}</div>
@@ -11,4 +11,4 @@ function Chat(props) {
   );
 }
 
-export default Chat;
+export default Message;

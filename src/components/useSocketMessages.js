@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useEffect} from 'react'
 
 export const useSocketMessages = (socket, token, socketState, setSocketState, data) => {
   !socket.fake && console.log('get-messages-success...');
@@ -10,8 +10,8 @@ export const useSocketMessages = (socket, token, socketState, setSocketState, da
     })
   }, [socket, setSocketState]);
 
-  return useCallback(() => {
+  return () => {
     console.log('get-messages...');
     socket.emit('get-messages', {token, interlocutorId: data.interlocutorId});
-  }, [token, socket]);
+  };
 };
