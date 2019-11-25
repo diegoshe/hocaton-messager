@@ -1,14 +1,20 @@
 import React from 'react';
-
+import MessageOpponent from "./MessageOpponent";
+import MessagePersonal from "./MessagePersonal";
 
 function Chat(props) {
+  console.log(props)
+  console.log("chat")
   return (
-    <div className="message" onClick={() => props.getMessages(props.c.interlocutor.id)}>
-      <figure className="avatar"><img src={props.c.interlocutor.photo.small} /></figure>
-      <span className="message-text" onClick={props.getMessages}>{props.c.interlocutor.name}</span>
-      <div className="timestamp">{props.c.interlocutor.visitDate}</div>
-    </div>
-  );
+    <>
+    {
+      props.c > 0 ?
+        <MessageOpponent/>
+        :
+        <MessagePersonal c={props.c}/>
+}
+</>
+);
 }
 
 export default Chat;

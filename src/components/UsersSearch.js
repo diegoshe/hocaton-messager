@@ -1,7 +1,8 @@
 import React from 'react';
 
 
-function Users(props) {
+function UsersSearch(props) {
+  console.log("users-search")
   return (
     <div className="message" onClick={() => props.initChats(props.c.id)}>
       <figure className="avatar"><img src={props.c.photos.small} /></figure>
@@ -11,5 +12,5 @@ function Users(props) {
   );
 }
 
-export default Users;
+export default UsersSearch;
 

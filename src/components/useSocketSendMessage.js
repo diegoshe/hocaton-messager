@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useEffect} from 'react'
 
 export const useSocketSendMessage = (socket, token, socketState, setSocketState, data) => {
   !socket.fake && console.log('send-message-success...');

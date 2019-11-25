@@ -38,7 +38,7 @@ body {
 }
 
 /*--------------------
-Chat
+Dialogs
 --------------------*/
 .chat {
   position: absolute;
@@ -67,7 +67,7 @@ Chat
 }
 
 /*--------------------
-Chat Title
+Dialogs Title
 --------------------*/
 .chat-title {
   -webkit-box-flex: 0;

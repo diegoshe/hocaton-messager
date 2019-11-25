@@ -1,11 +1,12 @@
 import React from 'react';
 
 
-function MessagePersonal() {
+function MessagePersonal(props) {
+  console.log("message-personal")
   return (
     <div className="message message-personal">
-      <span className="message-text">Привет</span>
-      <div className="timestamp">12:56</div>
+      <span className="message-text">{props.c.body}</span>
+      <div className="timestamp">{props.c.date}</div>
     </div>
   );
 }

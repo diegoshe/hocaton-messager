@@ -1,148 +1,17 @@
 import React, {Component} from 'react';
 import './App.css';
-import MessageLoading from "./components/MessageLoading";
-import MessageOpponent from "./components/MessageOpponent";
-import MessagePersonal from "./components/MessagePersonal";
-import MessageStatus from "./components/MessageStatus";
-import openSocket from 'socket.io-client';
 import * as axios from "axios";
-import AppHooks from "./components/AppHooks";
+import Dialogs from "./components/Dialogs";
+import UsersSearch from "./components/UsersSearch";
 import Chat from "./components/Chat";
-import Users from "./components/Users";
-import Message from "./components/Message";
 
 
 class App extends Component {
   state = {
-    switchView: "users",
-    users: [],
-    MessagesResponse: {
-      page: 5,
-      totalCount: 5,
-      pageSize: 5,
-      messages: {
-        chatId: "43",
-        authorId: "54",
-        isRead: true,
-        date: {},
-        status: ""                  // "not-deleted" | "deleted-for-sender" | "deleted-for-recipient" | "deleted-for-all";
-      }
-    },
-    IPhoto: {
-      small: "",
-      large: ""
-    },
-    IInterlocutor: {
-      id: "",
-      name: "Tolik",
-      photo: {
-        small: "",
-        large: ""
-      },
-      visitDate: "Date"
-    },
-    ILastMessage: {
-      body: "",
-      authorId: "",
-      date: "Date",
-      isRead: true
-    },
-    IChat: {
-      _id: "",
-      userId: "",
-      interlocutor: {
-        id: "",
-        name: "Tolik",
-        photo: {
-          small: "",
-          large: ""
-        },
-        visitDate: "Date"
-      },
-      newMessagesCount: 22,
-      lastMessage: {
-        body: "",
-        authorId: "",
-        date: "Date",
-        isRead: true
-      },
-      isHidden: true
-    },
+    switchView: "dialogs",
+    users: []
+  };
 
-    //type MessageStatusType = "not-deleted" | "deleted-for-sender" | "deleted-for-recipient" | "deleted-for-all";
-
-    IMessage: {
-      chatId: "",
-      authorId: "",
-      isRead: "",
-      date: "Date",
-      status: ""              // "not-deleted" | "deleted-for-sender" | "deleted-for-recipient" | "deleted-for-all";
-    }
-  }
-
-  // export class Chat implements IChat {
-  //   _id: string
-  //
-  //   constructor(public userId: string,
-  //   public interlocutor: IInterlocutor,
-  //   public newMessagesCount: number,
-  //   public lastMessage: LastMessage,
-  //   public isHidden: boolean) {
-  //   this._id = new Date().getTime().toString();
-  // }
-//   }
-//
-// //   export class Interlocutor implements IInterlocutor {
-// //   constructor(public id: string,
-// //   public name: string,
-// //   public photo: IPhoto,
-// //   public visitDate: Date) {
-// // }
-// }
-
-// export class LastMessage implements ILastMessage {
-//   constructor(public body: string,
-//   public authorId: string,
-//   public date: Date,
-//   public isRead: boolean) {
-// }
-// }
-//
-// export class Photo implements IPhoto {
-//   constructor(public large: string,
-//   public small: string) {
-// }
-// }
-//
-//
-// export class Message implements IMessage {
-//   _id: string
-//
-//   constructor(public chatId: string,
-//   public authorId: string,
-//   public isRead: boolean,
-//   public date: Date,
-//   public status: MessageStatusType) {
-//   this._id = "fake" + new Date().getTime();
-// }
-// }
-  // componentDidMount() {
-  //   const token = "73fae02b-f2f6-4ec5-8d42-ee3df6a8c5a8";
-  //   const socket = openSocket('http://messenger-hackathon.herokuapp.com');
-  //   socket.on('send-message-success', (data) => {
-  //     console.log(data)
-
-  //   })
-  //   socket.emit('send-message', {token})
-  //
-  //   // const instance = axios.create({
-  //   //   withCredentials: true,
-  //   //   baseURL: 'https://social-network.samuraijs.com/api/1.0/'
-  //   // });
-  //   //     instance.post(`auth/get-token`).then(x => console.log(x));
-  // }
-
-// }
   getUsers = (props) => {
     const instance = axios.create({
       withCredentials: true,
@@ -152,18 +21,17 @@ class App extends Component {
 
     instance.get(`users?page=${1}&count=${10}&term=${this.props.data.message}`)
       .then(response => {
-        this.setState({users: response.data.items})
+        this.setState({users: response.data.items});
         console.log(response.data.items)
       });
   };
 
   getChats = () => {
-    this.setState({switchView: "chats"});
+    this.setState({switchView: "dialogs"});
     this.props.getChats();
   };
 
   setMessage = (e) => {
-    console.log(this.props.data)
     this.props.setData({...this.props.data, message: e.currentTarget.value});
   };
 
@@ -174,20 +42,21 @@ class App extends Component {
   initChats = (id) => {
     this.props.setData({...this.props.data, interlocutorId: id});
     setTimeout(() => this.props.initChat(), 1000);
-    this.setState({...this.state, switchView: "messages"});
+    this.setState({...this.state, switchView: "chat"});
     this.props.getMessages();
   };
 
   getMessages = (id) => {
+    this.defaultView = false;
     this.props.setData({...this.props.data, interlocutorId: id});
-    this.setState({...this.state, switchView: "messages"});
+    // this.setState({...this.state, switchView: "chat"});
     setTimeout(() => this.props.getMessages(), 1000);
   };
 //   connectAPI = () => {
 //     const connection = new WebSocket('5ac078f7-4935-4223-bad6-63f58b80cd23');
 //     console.log(connection);
 // }
-
+  defaultView = true;
   render() {
     const changeButton = this.state.switchView === "messages" ? "отправить" : "найти";
     const changeFunctionButton = this.state.switchView === "messages" ?
@@ -206,41 +75,34 @@ class App extends Component {
             </figure>
           </div>
           <div className="messages">
-            <div className="messages-templates">
-              <div className="message loading">
-                <figure className="avatar"><img src="#"/></figure>
-                <span></span>
-              </div>
-              <div className="message">
-                <figure className="avatar"><img src="#"/></figure>
-                <span className="message-text">Привет!</span>
-                <div className="timestamp">12:56</div>
-              </div>
-              <div className="message message-personal">
-                <span className="message-text">Привет</span>
-                <div className="timestamp">12:56</div>
-              </div>
-              <div className="message message-status">
-                <span className="message-text">Пользователь не в сети</span>
-              </div>
-            </div>
             <div className="messages-content">
-              {this.state.switchView === "messages" && this.props.socketState && this.props.socketState.messages &&
+              {this.state.switchView === "chat" &&
+              this.props.socketState &&
+              this.props.socketState.messages &&
               this.props.socketState.messages.messages.map((c, i) =>
-                <Message key={i} c={c}
+                <Chat key={i} c={c}
                       users={this.state.users}
                       setData={this.props.setData}
                       data={this.props.data}/>)}
-              {this.state.switchView === "chats" && this.props.socketState && this.props.socketState.chats && this.props.socketState.chats
-                .map((c, i) => <Chat key={i} c={c} getMessages={this.getMessages} users={this.state.users}
-                                     setData={this.props.setData} data={this.props.data}/>)}
-              {this.state.switchView === "users" && this.state.users
-                .map((c, i) => <Users key={i} c={c} initChats={this.initChats} users={this.state.users}
-                                      setData={this.props.setData} data={this.props.data}/>)}
-              {/*<MessageLoading/>*/}
-              {/*<MessageOpponent/>*/}
-              {/*<MessagePersonal/>*/}
-              {/*<MessageStatus/>*/}
+
+              {this.state.switchView === "users-search" && this.state.users
+                .map((c, i) => <UsersSearch key={i} c={c} initChats={this.initChats} users={this.state.users}
+                                            setData={this.props.setData} data={this.props.data}/>)}
+
+              {!this.defaultView &&
+              this.state.switchView === "dialogs" &&
+              this.props.socketState &&
+              this.props.socketState.chats &&
+              this.props.socketState.chats
+                .map((c, i) => <Dialogs key={i} c={c} getMessages={this.getMessages} users={this.state.users}
+                                        setData={this.props.setData} data={this.props.data}/>)}
+
+              {/*{*/}
+              {/*this.defaultView &&*/}
+              {/*this.props.socketState &&*/}
+              {/*this.props.socketState.chats*/}
+              {/*  .map((c, i) => <Dialogs key={i} c={c} getMessages={this.getMessages} users={this.state.users}*/}
+              {/*                          setData={this.props.setData} data={this.props.data}/>)}*/}
             </div>
           </div>
           <div className="message-box">
@@ -256,14 +118,3 @@ class App extends Component {
 }
 
 export default App;
-
-// 0: {name: "Gachimuchi", id: 5253, uniqueUrlName: null, photos: {…}, status: null, …}
-// 1: {name: "Arm", id: 5252, uniqueUrlName: null, photos: {…}, status: null, …}
-// 2: {name: "sieugene01", id: 5251, uniqueUrlName: null, photos: {…}, status: null, …}
-// 3: {name: "Antonij", id: 5250, uniqueUrlName: null, photos: {…}, status: null, …}
-// 4: {name: "AlexShinkevich", id: 5249, uniqueUrlName: null, photos: {…}, status: null, …}
-// 5: {name: "leshanative", id: 5248, uniqueUrlName: null, photos: {…}, status: null, …}
-// 6: {name: "Alina", id: 5247, uniqueUrlName: null, photos: {…}, status: null, …}
-// 7: {name: "bogelyk", id: 5246, uniqueUrlName: null, photos: {…}, status: null, …}
-// 8: {name: "rayfun", id: 5245, uniqueUrlName: null, photos: {…}, status: null, …}
-// 9: {name: "enlia", id: 5244, uniqueUrlName: null, photos: {…}, status: null, …}

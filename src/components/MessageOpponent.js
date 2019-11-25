@@ -1,12 +1,19 @@
 import React from 'react';
 
 function MessageOpponent(props) {
+  console.log(props)
+  console.log("user-opponent")
   return (
-    <div className="message">
-      <figure className="avatar"><img src="{}" /></figure>
-      <span className="message-text">{props.message.body}</span>
-      <div className="timestamp">12:56</div>
-    </div>
+    // {
+    //   props.c.chats.newMessagesCount > 0 ?
+        <div className="message">
+          <figure className="avatar"><img src={props.c.interlocutor.photo.small}/></figure>
+          <span className="message-text">{props.c.lastMessage.body}</span>
+          <div className="timestamp">{props.c.lastMessage.date}</div>
+        </div>
+        // :
+        // <></>
+    // }
   );
 }
 
